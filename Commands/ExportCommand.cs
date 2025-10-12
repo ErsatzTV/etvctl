@@ -1,9 +1,9 @@
 using ConsoleAppFramework;
 using etvctl.Api;
 using etvctl.Models;
+using etvctl.Models.Config;
+using etvctl.Planning;
 using Spectre.Console;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace etvctl.Commands;
 
@@ -24,19 +24,13 @@ public class ExportCommand : BaseCommand
         ICollection<SmartCollectionResponseModel> smartCollections =
             await client.GetSmartCollections(cancellationToken);
 
-        var rootModel = new RootModel();
+        var templateModel = new TemplateModel();
         foreach (var smartCollection in smartCollections)
         {
             var model = new SmartCollectionModel { Name = smartCollection.Name, Query = smartCollection.Query };
-            rootModel.SmartCollections.Add(model);
+            templateModel.SmartCollections.Add(model);
         }
 
-        var serializer = new StaticSerializerBuilder(new YamlStaticContext())
-            .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
-            .Build();
-
-        AnsiConsole.MarkupLine($"Exporting smart collections to {config.Template}");
-        await File.WriteAllTextAsync(config.Template!, serializer.Serialize(rootModel), cancellationToken);
+        await YamlWriter.WriteTemplate(config, templateModel, cancellationToken);
     }
 }
