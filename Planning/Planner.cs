@@ -48,4 +48,42 @@ public class Planner
             }
         };
     }
+
+    public async Task<bool> ApplyPlan(
+        IErsatzTVv1 client,
+        PlanModel plan,
+        CancellationToken cancellationToken = default)
+    {
+        foreach (var toAdd in plan.SmartCollections.ToAdd)
+        {
+            if (string.IsNullOrWhiteSpace(toAdd.Name) || string.IsNullOrWhiteSpace(toAdd.Query))
+            {
+                continue;
+            }
+
+            await client.CreateSmartCollection(
+                new CreateSmartCollection { Name = toAdd.Name, Query = toAdd.Query },
+                cancellationToken);
+        }
+
+        foreach ((SmartCollectionModel toUpdateNew, SmartCollectionResponseModel toUpdateOld) in plan.SmartCollections
+                     .ToUpdate)
+        {
+            if (string.IsNullOrWhiteSpace(toUpdateNew.Query))
+            {
+                continue;
+            }
+
+            await client.UpdateSmartCollection(
+                new UpdateSmartCollection { Id = toUpdateOld.Id, Name = toUpdateOld.Name, Query = toUpdateNew.Query },
+                cancellationToken);
+        }
+
+        foreach (var toRemove in plan.SmartCollections.ToRemove)
+        {
+            await client.DeleteSmartCollection(toRemove.Id, cancellationToken);
+        }
+
+        return true;
+    }
 }

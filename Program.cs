@@ -15,5 +15,6 @@ var app = ConsoleApp.Create();
 
 app.Add<ExportCommand>();
 app.Add<PlanCommand>();
+app.Add<ApplyCommand>();
 
 await app.RunAsync(args);

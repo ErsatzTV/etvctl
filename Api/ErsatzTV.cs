@@ -73,6 +73,23 @@ namespace etvctl.Api
         [Get("/api/collections/smart")]
         Task<ICollection<SmartCollectionResponseModel>> GetSmartCollections(CancellationToken cancellationToken = default);
 
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Content-Type: application/json")]
+        [Post("/api/collections/smart/new")]
+        Task CreateSmartCollection([Body] CreateSmartCollection body, CancellationToken cancellationToken = default);
+
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Content-Type: application/json")]
+        [Put("/api/collections/smart/update")]
+        Task UpdateSmartCollection([Body] UpdateSmartCollection body, CancellationToken cancellationToken = default);
+
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Delete("/api/collections/smart/delete/{id}")]
+        Task DeleteSmartCollection(int id, CancellationToken cancellationToken = default);
+
         /// <summary>Get version</summary>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
@@ -168,6 +185,27 @@ namespace etvctl.Api
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateSmartCollection
+    {
+
+        [JsonPropertyName("query")]
+        public string Query { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class HlsSessionModel
     {
 
@@ -219,6 +257,30 @@ namespace etvctl.Api
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class SmartCollectionResponseModel
+    {
+
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("query")]
+        public string Query { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateSmartCollection
     {
 
         [JsonPropertyName("id")]
