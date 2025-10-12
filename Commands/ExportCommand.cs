@@ -10,12 +10,12 @@ namespace etvctl.Commands;
 public class ExportCommand(ILogger<ExportCommand> logger) : BaseCommand(logger)
 {
     [Command("export")]
-    public async Task Run(string server, CancellationToken cancellationToken = default)
+    public async Task Run(CancellationToken cancellationToken = default)
     {
-        var client = await ValidateServer(server, cancellationToken);
+        var client = await ValidateServer(cancellationToken);
         if (client == null)
         {
-            logger.LogCritical("Failed to validate server {Server}", server);
+            logger.LogCritical("Failed to validate ErsatzTV server");
             return;
         }
 
