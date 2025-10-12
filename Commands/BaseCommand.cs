@@ -19,7 +19,7 @@ public abstract class BaseCommand(ILogger logger)
 
             var client = RestService.For<IErsatzTVv1>(server, settings);
 
-            var version = await client.Version(cancellationToken);
+            var version = await client.GetVersion(cancellationToken);
 
             if (version.ApiVersion != RequiredApiVersion)
             {

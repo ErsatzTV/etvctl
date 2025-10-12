@@ -19,18 +19,20 @@ public class ExportCommand(ILogger<ExportCommand> logger) : BaseCommand(logger)
             return;
         }
 
-        ICollection<ChannelResponseModel> channels = await client.Channels(cancellationToken);
+        ICollection<SmartCollectionResponseModel> smartCollections =
+            await client.GetSmartCollections(cancellationToken);
 
-        var model = new RootModel();
-        foreach (var channel in channels)
+        var rootModel = new RootModel();
+        foreach (var smartCollection in smartCollections)
         {
-            model.Channels.Add(new ChannelModel { Number = channel.Number, Name = channel.Name });
+            var model = new SmartCollectionModel { Name = smartCollection.Name, Query = smartCollection.Query };
+            rootModel.SmartCollections.Add(model);
         }
 
         var serializer = new StaticSerializerBuilder(new YamlStaticContext())
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build();
 
-        Console.WriteLine(serializer.Serialize(model));
+        Console.WriteLine(serializer.Serialize(rootModel));
     }
 }

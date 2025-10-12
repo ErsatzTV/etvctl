@@ -6,6 +6,7 @@ namespace etvctl;
 [YamlStaticContext]
 [YamlSerializable(typeof(RootModel))]
 [YamlSerializable(typeof(ChannelModel))]
+[YamlSerializable(typeof(SmartCollectionModel))]
 public partial class YamlStaticContext : YamlDotNet.Serialization.StaticContext
 {
 }

@@ -67,12 +67,18 @@ namespace etvctl.Api
         [Delete("/api/session/{channelNumber}")]
         Task Session(string channelNumber, CancellationToken cancellationToken = default);
 
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/collections/smart")]
+        Task<ICollection<SmartCollectionResponseModel>> GetSmartCollections(CancellationToken cancellationToken = default);
+
         /// <summary>Get version</summary>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/version")]
-        Task<CombinedVersion> Version(CancellationToken cancellationToken = default);
+        Task<CombinedVersion> GetVersion(CancellationToken cancellationToken = default);
 
 
     }
@@ -199,6 +205,30 @@ namespace etvctl.Api
 
         [JsonPropertyName("deepScan")]
         public bool DeepScan { get; set; } = false;
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SmartCollectionResponseModel
+    {
+
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("query")]
+        public string Query { get; set; }
 
         private IDictionary<string, object> _additionalProperties;
 
