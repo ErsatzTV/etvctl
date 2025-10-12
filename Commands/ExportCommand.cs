@@ -1,27 +1,27 @@
 using ConsoleAppFramework;
 using etvctl.Api;
 using etvctl.Models;
-using Refit;
+using Microsoft.Extensions.Logging;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace etvctl.Commands;
 
-public class ExportCommand()
+public class ExportCommand(ILogger<ExportCommand> logger) : BaseCommand(logger)
 {
     [Command("export")]
     public async Task Run(string server, CancellationToken cancellationToken = default)
     {
-        var settings = new RefitSettings
+        var client = await ValidateServer(server, cancellationToken);
+        if (client == null)
         {
-            ContentSerializer = new SystemTextJsonContentSerializer(RefitSerializerContext.Default.Options)
-        };
+            logger.LogCritical("Failed to validate server {Server}", server);
+            return;
+        }
 
-        var client = RestService.For<IErsatzTVv1>(server, settings);
-        var channels = await client.Channels();
-        
+        ICollection<ChannelResponseModel> channels = await client.Channels(cancellationToken);
+
         var model = new RootModel();
-
         foreach (var channel in channels)
         {
             model.Channels.Add(new ChannelModel { Number = channel.Number, Name = channel.Name });

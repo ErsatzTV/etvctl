@@ -6,6 +6,7 @@
 using Refit;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 #nullable enable annotations
@@ -20,58 +21,58 @@ namespace etvctl.Api
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/channels")]
-        Task<ICollection<ChannelResponseModel>> Channels();
+        Task<ICollection<ChannelResponseModel>> Channels(CancellationToken cancellationToken = default);
 
         /// <summary>Reset channel playout</summary>
         /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Post("/api/channels/{channelNumber}/playout/reset")]
-        Task Reset(string channelNumber);
+        Task Reset(string channelNumber, CancellationToken cancellationToken = default);
 
         /// <summary>Scan library</summary>
         /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Post("/api/libraries/{id}/scan")]
-        Task Scan(int id);
+        Task Scan(int id, CancellationToken cancellationToken = default);
 
         /// <summary>Scan show</summary>
         /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Headers("Content-Type: application/json")]
         [Post("/api/libraries/{id}/scan-show")]
-        Task ScanShow(int id, [Body] ScanShowRequest body);
+        Task ScanShow(int id, [Body] ScanShowRequest body, CancellationToken cancellationToken = default);
 
         /// <summary>Garbage collect</summary>
         /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Get("/api/maintenance/gc")]
-        Task Gc([Query] bool? force);
+        Task Gc([Query] bool? force, CancellationToken cancellationToken = default);
 
         /// <summary>Empty trash</summary>
         /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Post("/api/maintenance/empty_trash")]
-        Task Trash();
+        Task Trash(CancellationToken cancellationToken = default);
 
         /// <summary>Get sessions</summary>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/sessions")]
-        Task<ICollection<HlsSessionModel>> Sessions();
+        Task<ICollection<HlsSessionModel>> Sessions(CancellationToken cancellationToken = default);
 
         /// <summary>Stop session</summary>
         /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Delete("/api/session/{channelNumber}")]
-        Task Session(string channelNumber);
+        Task Session(string channelNumber, CancellationToken cancellationToken = default);
 
         /// <summary>Get version</summary>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/version")]
-        Task<string> Version();
+        Task<CombinedVersion> Version(CancellationToken cancellationToken = default);
 
 
     }
@@ -127,6 +128,27 @@ namespace etvctl.Api
 
         [JsonPropertyName("streamingMode")]
         public string StreamingMode { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CombinedVersion
+    {
+
+        [JsonPropertyName("apiVersion")]
+        public int ApiVersion { get; set; }
+
+        [JsonPropertyName("appVersion")]
+        public string AppVersion { get; set; }
 
         private IDictionary<string, object> _additionalProperties;
 
