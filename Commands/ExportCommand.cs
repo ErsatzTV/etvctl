@@ -32,6 +32,7 @@ public class ExportCommand : BaseCommand
         }
 
         var serializer = new StaticSerializerBuilder(new YamlStaticContext())
+            .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build();
 

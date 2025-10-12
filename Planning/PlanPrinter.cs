@@ -35,10 +35,21 @@ public class PlanPrinter
         {
             foreach ((SmartCollectionModel newValue, SmartCollectionResponseModel oldValue) in plan.SmartCollections.ToUpdate)
             {
-                AnsiConsole.MarkupLine($"  # Smart Collection \"{newValue.Name}\" will be changed");
-                AnsiConsole.MarkupLine($"  [yellow]~ resource \"smart_collection\" \"{newValue.Name}\" {{[/]");
-                AnsiConsole.MarkupLine("  [red]    - query:\t\"{0}\"[/]", Markup.Escape(oldValue.Query));
-                AnsiConsole.MarkupLine("  [green]    + query:\t\"{0}\"[/]", Markup.Escape(newValue.Query!));
+                AnsiConsole.MarkupLine($"  # Smart Collection \"{oldValue.Name}\" will be changed");
+                AnsiConsole.MarkupLine($"  [yellow]~ resource \"smart_collection\" \"{oldValue.Name}\" {{[/]");
+
+                if (!string.Equals(newValue.Query, oldValue.Query))
+                {
+                    AnsiConsole.MarkupLine("  [red]    - query:\t\"{0}\"[/]", Markup.Escape(oldValue.Query));
+                    AnsiConsole.MarkupLine("  [green]    + query:\t\"{0}\"[/]", Markup.Escape(newValue.Query!));
+                }
+
+                if (!string.Equals(newValue.Name, oldValue.Name))
+                {
+                    AnsiConsole.MarkupLine("  [red]    - name:\t\"{0}\"[/]", Markup.Escape(oldValue.Name));
+                    AnsiConsole.MarkupLine("  [green]    + name:\t\"{0}\"[/]", Markup.Escape(newValue.Name!));
+                }
+
                 AnsiConsole.MarkupLine("  [yellow]  }[/]");
             }
 
