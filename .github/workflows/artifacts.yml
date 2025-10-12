@@ -1,0 +1,169 @@
+name: Build Artifacts
+on:
+  workflow_call:
+    inputs:
+      release_tag:
+        description: 'Release tag'
+        required: true
+        type: string
+      release_version:
+        description: 'Release version number (e.g. v0.3.7-alpha)'
+        required: true
+        type: string
+    secrets:
+      apple_developer_certificate_p12_base64:
+        required: true
+      apple_developer_certificate_password:
+        required: true
+      ac_username:
+        required: true
+      ac_password:
+        required: true
+      gh_token:
+        required: true
+jobs:
+  build_and_upload_mac:
+    name: Mac Build & Upload
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-14
+            target: osx-x64
+          - os: macos-14
+            target: osx-arm64
+    steps:
+      - name: Get the sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.203
+
+      - name: Clean
+        run: dotnet clean --configuration Release && dotnet nuget locals all --clear
+
+      - name: Install dependencies
+        run: dotnet restore -r "${{ matrix.target}}"
+
+      - name: Import Code-Signing Certificates
+        uses: Apple-Actions/import-codesign-certs@v2
+        with:
+          p12-file-base64: ${{ secrets.apple_developer_certificate_p12_base64 }}
+          p12-password: ${{ secrets.apple_developer_certificate_password }}
+
+      - name: Calculate Release Name
+        shell: bash
+        run: |
+          release_name="etvctl-${{ inputs.release_version }}-${{ matrix.target }}"
+          echo "RELEASE_NAME=${release_name}" >> $GITHUB_ENV
+
+      - name: Build
+        shell: bash
+        run: |
+          mkdir "${{ env.RELEASE_NAME }}"
+          dotnet publish -o "${{ env.RELEASE_NAME }}"
+
+          # sign
+          ./scripts/macOS/sign.sh "${{ env.RELEASE_NAME }}/etvctl"
+
+          # Pack files
+          7z a -tzip "${{ env.RELEASE_NAME }}.zip" "./${{ env.RELEASE_NAME }}/*"
+
+          # Delete output directory
+          rm -r "${{ env.RELEASE_NAME }}"
+
+      - name: Notarize
+        shell: bash
+        run: |
+          xcrun notarytool submit "${{ env.RELEASE_NAME }}.zip" --apple-id "${{ secrets.ac_username }}" --password "${{ secrets.ac_password }}" --team-id 32MB98Q32R --wait
+
+      - name: Delete old release assets
+        uses: mknejp/delete-release-assets@v1
+        if: ${{ inputs.release_tag == 'develop' }}
+        with:
+          token: ${{ secrets.gh_token }}
+          tag: ${{ inputs.release_tag }}
+          fail-if-no-assets: false
+          assets: "*${{ matrix.target }}.zip"
+
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          tag_name: ${{ inputs.release_tag }}
+          files: "${{ env.RELEASE_NAME }}.zip"
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_token }}
+  build_and_upload:
+    name: Build & Upload
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: linux-x64
+          - os: ubuntu-latest
+            target: linux-musl-x64
+          - os: ubuntu-latest
+            target: linux-arm
+          - os: ubuntu-latest
+            target: linux-arm64
+          - os: ubuntu-latest
+            target: win-x64
+    steps:
+      - name: Get the sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.203
+
+      - name: Clean
+        run: dotnet clean --configuration Release && dotnet nuget locals all --clear
+
+      - name: Install dependencies
+        run: dotnet restore -r "${{ matrix.target }}"
+
+      - name: Calculate Release Name
+        shell: bash
+        run: |
+          release_name="etvctl-${{ inputs.release_version }}-${{ matrix.target }}"
+          echo "RELEASE_NAME=${release_name}" >> $GITHUB_ENV
+
+      - name: Build
+        shell: bash
+        run: |
+          mkdir "${{ env.RELEASE_NAME }}"
+          dotnet publish -o "${{ env.RELEASE_NAME }}"
+
+          # Pack files
+          tar czvf "${{ env.RELEASE_NAME }}.tar.gz" "${{ env.RELEASE_NAME }}"
+
+          # Delete output directory
+          rm -r "${{ env.RELEASE_NAME }}"
+
+      - name: Delete old release assets
+        uses: mknejp/delete-release-assets@v1
+        if: ${{ inputs.release_tag == 'develop' }}
+        with:
+          token: ${{ secrets.gh_token }}
+          tag: ${{ inputs.release_tag }}
+          fail-if-no-assets: false
+          assets: "*${{ matrix.target }}.tar.gz"
+
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          tag_name: ${{ inputs.release_tag }}
+          files: "${{ env.RELEASE_NAME }}.tar.gz"
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_token }}
