@@ -1,17 +1,12 @@
 ﻿using ConsoleAppFramework;
 using etvctl.Commands;
+using etvctl.Planning;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using ZLogger;
 
 var services = new ServiceCollection();
 
-services.AddLogging(x =>
-{
-    x.ClearProviders();
-    x.SetMinimumLevel(LogLevel.Information);
-    x.AddZLoggerConsole(o => o.LogToStandardErrorThreshold = LogLevel.Warning);
-});
+services.AddSingleton<Planner>();
+services.AddSingleton<PlanPrinter>();
 
 await using var serviceProvider = services.BuildServiceProvider();
 ConsoleApp.ServiceProvider = serviceProvider;
@@ -19,5 +14,6 @@ ConsoleApp.ServiceProvider = serviceProvider;
 var app = ConsoleApp.Create();
 
 app.Add<ExportCommand>();
+app.Add<PlanCommand>();
 
 await app.RunAsync(args);

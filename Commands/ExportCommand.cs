@@ -1,13 +1,13 @@
 using ConsoleAppFramework;
 using etvctl.Api;
 using etvctl.Models;
-using Microsoft.Extensions.Logging;
+using Spectre.Console;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace etvctl.Commands;
 
-public class ExportCommand(ILogger<ExportCommand> logger) : BaseCommand(logger)
+public class ExportCommand : BaseCommand
 {
     [Command("export")]
     public async Task Run(CancellationToken cancellationToken = default)
@@ -15,7 +15,7 @@ public class ExportCommand(ILogger<ExportCommand> logger) : BaseCommand(logger)
         var configAndClient = await ValidateServer(cancellationToken);
         if (configAndClient == null)
         {
-            logger.LogCritical("Failed to validate ErsatzTV server");
+            AnsiConsole.MarkupLine("[red]Failed to validate ErsatzTV server[/]");
             return;
         }
 
@@ -35,7 +35,7 @@ public class ExportCommand(ILogger<ExportCommand> logger) : BaseCommand(logger)
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build();
 
-        logger.LogInformation("Exporting smart collections to {Template}", config.Template);
+        AnsiConsole.MarkupLine($"Exporting smart collections to {config.Template}");
         await File.WriteAllTextAsync(config.Template!, serializer.Serialize(rootModel), cancellationToken);
     }
 }

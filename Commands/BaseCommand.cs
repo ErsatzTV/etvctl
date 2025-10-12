@@ -1,13 +1,13 @@
 using etvctl.Api;
 using etvctl.Models;
-using Microsoft.Extensions.Logging;
 using Refit;
+using Spectre.Console;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace etvctl.Commands;
 
-public abstract class BaseCommand(ILogger logger)
+public abstract class BaseCommand
 {
     private const int RequiredApiVersion = 1;
 
@@ -17,7 +17,7 @@ public abstract class BaseCommand(ILogger logger)
         {
             if (!File.Exists("config.yml"))
             {
-                logger.LogCritical("config.yml is required in the current directory");
+                AnsiConsole.MarkupLine("[red]config.yml is required in the current directory[/]");
                 return null;
             }
 
@@ -30,13 +30,13 @@ public abstract class BaseCommand(ILogger logger)
 
             if (string.IsNullOrWhiteSpace(config.Server))
             {
-                logger.LogCritical("config.yml requires a server");
+                AnsiConsole.MarkupLine("[red]config.yml requires a server[/]");
                 return null;
             }
 
             if (string.IsNullOrWhiteSpace(config.Template))
             {
-                logger.LogCritical("config.yml requires a template");
+                AnsiConsole.MarkupLine("[red]config.yml requires a template[/]");
                 return null;
             }
 
@@ -51,10 +51,7 @@ public abstract class BaseCommand(ILogger logger)
 
             if (version.ApiVersion != RequiredApiVersion)
             {
-                logger.LogCritical(
-                    "Server API version {Version} is not required version {RequiredVersion}",
-                    version.ApiVersion,
-                    RequiredApiVersion);
+                AnsiConsole.MarkupLine($"[red]Server API version {version.ApiVersion} is not required version {RequiredApiVersion}[/]");
                 return null;
             }
 
@@ -62,7 +59,7 @@ public abstract class BaseCommand(ILogger logger)
         }
         catch (Exception ex)
         {
-            logger.LogCritical("{Message}", ex.Message);
+            AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
             return null;
         }
     }
