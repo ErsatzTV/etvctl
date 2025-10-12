@@ -11,7 +11,7 @@ public abstract class BaseCommand(ILogger logger)
 {
     private const int RequiredApiVersion = 1;
 
-    protected async Task<IErsatzTVv1?> ValidateServer(CancellationToken cancellationToken)
+    protected async Task<ConfigAndClient?> ValidateServer(CancellationToken cancellationToken)
     {
         try
         {
@@ -28,9 +28,15 @@ public abstract class BaseCommand(ILogger logger)
             var config = deserializer.Deserialize<ConfigModel>(
                 await File.ReadAllTextAsync("config.yml", cancellationToken));
 
-            if (config.Server == null)
+            if (string.IsNullOrWhiteSpace(config.Server))
             {
                 logger.LogCritical("config.yml requires a server");
+                return null;
+            }
+
+            if (string.IsNullOrWhiteSpace(config.Template))
+            {
+                logger.LogCritical("config.yml requires a template");
                 return null;
             }
 
@@ -52,7 +58,7 @@ public abstract class BaseCommand(ILogger logger)
                 return null;
             }
 
-            return client;
+            return new ConfigAndClient(config, client);
         }
         catch (Exception ex)
         {
@@ -60,4 +66,6 @@ public abstract class BaseCommand(ILogger logger)
             return null;
         }
     }
+
+    protected sealed record ConfigAndClient(ConfigModel ConfigModel, IErsatzTVv1 Client);
 }

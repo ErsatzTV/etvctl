@@ -1,2 +1,2 @@
 server: http://localhost:8409
-
+template: /tmp/smart_collections.yml

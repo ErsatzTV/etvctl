@@ -12,12 +12,14 @@ public class ExportCommand(ILogger<ExportCommand> logger) : BaseCommand(logger)
     [Command("export")]
     public async Task Run(CancellationToken cancellationToken = default)
     {
-        var client = await ValidateServer(cancellationToken);
-        if (client == null)
+        var configAndClient = await ValidateServer(cancellationToken);
+        if (configAndClient == null)
         {
             logger.LogCritical("Failed to validate ErsatzTV server");
             return;
         }
+
+        (ConfigModel config, IErsatzTVv1 client) = configAndClient;
 
         ICollection<SmartCollectionResponseModel> smartCollections =
             await client.GetSmartCollections(cancellationToken);
@@ -33,6 +35,7 @@ public class ExportCommand(ILogger<ExportCommand> logger) : BaseCommand(logger)
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build();
 
-        Console.WriteLine(serializer.Serialize(rootModel));
+        logger.LogInformation("Exporting smart collections to {Template}", config.Template);
+        await File.WriteAllTextAsync(config.Template!, serializer.Serialize(rootModel), cancellationToken);
     }
 }

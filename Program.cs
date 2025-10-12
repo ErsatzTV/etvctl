@@ -8,9 +8,8 @@ var services = new ServiceCollection();
 
 services.AddLogging(x =>
 {
-    // min level and stderr threshold both warning, so nothing will interfere with stdout
     x.ClearProviders();
-    x.SetMinimumLevel(LogLevel.Warning);
+    x.SetMinimumLevel(LogLevel.Information);
     x.AddZLoggerConsole(o => o.LogToStandardErrorThreshold = LogLevel.Warning);
 });
 
