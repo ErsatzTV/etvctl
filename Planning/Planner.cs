@@ -31,6 +31,7 @@ public class Planner
 
         var toUpdate = rootModel.SmartCollections
             .Where(sc => currentSmartCollections.Any(csc => csc.Name == sc.Name && csc.Query != sc.Query))
+            .Select(sc => new Tuple<SmartCollectionModel, SmartCollectionResponseModel>(sc, currentSmartCollections.First(csc => csc.Name == sc.Name)))
             .ToList();
 
         var toRemove = currentSmartCollections

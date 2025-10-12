@@ -1,3 +1,4 @@
+using etvctl.Api;
 using etvctl.Models;
 using Spectre.Console;
 
@@ -23,8 +24,22 @@ public class PlanPrinter
                 AnsiConsole.MarkupLine($"  # Smart Collection \"{smartCollection.Name}\" will be created");
                 AnsiConsole.MarkupLine($"  [green]+ resource \"smart_collection\" \"{smartCollection.Name}\" {{[/]");
                 AnsiConsole.MarkupLine($"  [green]    + name:\t\"{smartCollection.Name}\"[/]");
-                AnsiConsole.MarkupLine($"  [green]    + query:\t\"{smartCollection.Query}\"[/]");
+                AnsiConsole.MarkupLine("  [green]    + query:\t\"{0}\"[/]", Markup.Escape(smartCollection.Query!));
                 AnsiConsole.MarkupLine("  [green]  }[/]");
+            }
+
+            AnsiConsole.MarkupLine("");
+        }
+
+        if (plan.SmartCollections.ToUpdate.Count != 0)
+        {
+            foreach ((SmartCollectionModel newValue, SmartCollectionResponseModel oldValue) in plan.SmartCollections.ToUpdate)
+            {
+                AnsiConsole.MarkupLine($"  # Smart Collection \"{newValue.Name}\" will be changed");
+                AnsiConsole.MarkupLine($"  [yellow]~ resource \"smart_collection\" \"{newValue.Name}\" {{[/]");
+                AnsiConsole.MarkupLine("  [red]    - query:\t\"{0}\"[/]", Markup.Escape(oldValue.Query));
+                AnsiConsole.MarkupLine("  [green]    + query:\t\"{0}\"[/]", Markup.Escape(newValue.Query!));
+                AnsiConsole.MarkupLine("  [yellow]  }[/]");
             }
 
             AnsiConsole.MarkupLine("");
@@ -37,7 +52,7 @@ public class PlanPrinter
                 AnsiConsole.MarkupLine($"  # Smart Collection \"{smartCollection.Name}\" will be deleted");
                 AnsiConsole.MarkupLine($"  [red]- resource \"smart_collection\" \"{smartCollection.Name}\" {{[/]");
                 AnsiConsole.MarkupLine($"  [red]    - name:\t\"{smartCollection.Name}\"[/]");
-                AnsiConsole.MarkupLine($"  [red]    - query:\t\"{smartCollection.Query}\"[/]");
+                AnsiConsole.MarkupLine("  [red]    + query:\t\"{0}\"[/]", Markup.Escape(smartCollection.Query!));
                 AnsiConsole.MarkupLine("  [red]  }[/]");
             }
 
