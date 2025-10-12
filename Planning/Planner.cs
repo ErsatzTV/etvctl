@@ -27,6 +27,7 @@ public class Planner
         // diff and plan
         var toAdd = rootModel.SmartCollections
             .Where(sc => currentSmartCollections.All(csc => csc.Name != sc.Name))
+            .Where(sc => sc.Rename?.From is null)
             .ToList();
 
         var toUpdate = rootModel.SmartCollections
@@ -34,8 +35,18 @@ public class Planner
             .Select(sc => new Tuple<SmartCollectionModel, SmartCollectionResponseModel>(sc, currentSmartCollections.First(csc => csc.Name == sc.Name)))
             .ToList();
 
+        foreach (var sc in rootModel.SmartCollections.Where(sc => !string.IsNullOrWhiteSpace(sc.Rename?.From)))
+        {
+            var from = currentSmartCollections.FirstOrDefault(csc => string.Equals(csc.Name, sc.Rename?.From));
+            if (from != null)
+            {
+                toUpdate.Add(new Tuple<SmartCollectionModel, SmartCollectionResponseModel>(sc, from));
+            }
+        }
+
         var toRemove = currentSmartCollections
             .Where(sc => rootModel.SmartCollections.All(csc => csc.Name != sc.Name))
+            .Where(sc => rootModel.SmartCollections.All(csc => csc.Rename?.From != sc.Name))
             .ToList();
 
         return new PlanModel
@@ -69,13 +80,13 @@ public class Planner
         foreach ((SmartCollectionModel toUpdateNew, SmartCollectionResponseModel toUpdateOld) in plan.SmartCollections
                      .ToUpdate)
         {
-            if (string.IsNullOrWhiteSpace(toUpdateNew.Query))
+            if (string.IsNullOrWhiteSpace(toUpdateNew.Query) || string.IsNullOrWhiteSpace(toUpdateNew.Name))
             {
                 continue;
             }
 
             await client.UpdateSmartCollection(
-                new UpdateSmartCollection { Id = toUpdateOld.Id, Name = toUpdateOld.Name, Query = toUpdateNew.Query },
+                new UpdateSmartCollection { Id = toUpdateOld.Id, Name = toUpdateNew.Name, Query = toUpdateNew.Query },
                 cancellationToken);
         }
 

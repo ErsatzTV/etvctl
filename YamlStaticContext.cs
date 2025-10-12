@@ -8,6 +8,7 @@ namespace etvctl;
 [YamlSerializable(typeof(RootModel))]
 [YamlSerializable(typeof(ChannelModel))]
 [YamlSerializable(typeof(SmartCollectionModel))]
+[YamlSerializable(typeof(RenameModel))]
 public partial class YamlStaticContext : YamlDotNet.Serialization.StaticContext
 {
 }
