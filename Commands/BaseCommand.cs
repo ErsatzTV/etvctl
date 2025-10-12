@@ -1,5 +1,5 @@
 using etvctl.Api;
-using etvctl.Models;
+using etvctl.Models.Config;
 using Refit;
 using Spectre.Console;
 using YamlDotNet.Serialization;
@@ -23,6 +23,7 @@ public abstract class BaseCommand
 
             var deserializer = new StaticDeserializerBuilder(new YamlStaticContext())
                 .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                .WithTypeConverter(new FileOrganizationTypeConverter())
                 .Build();
 
             var config = deserializer.Deserialize<ConfigModel>(
@@ -34,9 +35,9 @@ public abstract class BaseCommand
                 return null;
             }
 
-            if (string.IsNullOrWhiteSpace(config.Template))
+            if (string.IsNullOrWhiteSpace(config.Template) || !Directory.Exists(config.Template))
             {
-                AnsiConsole.MarkupLine("[red]config.yml requires a template[/]");
+                AnsiConsole.MarkupLine("[red]config.yml requires a template (directory)[/]");
                 return null;
             }
 

@@ -22,4 +22,10 @@
       <PackageReference Include="YamlDotNet" Version="16.3.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="config.yml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

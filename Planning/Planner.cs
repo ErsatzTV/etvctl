@@ -1,7 +1,6 @@
 using etvctl.Api;
 using etvctl.Models;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
+using etvctl.Models.Config;
 
 namespace etvctl.Planning;
 
@@ -12,30 +11,25 @@ public class Planner
         IErsatzTVv1 client,
         CancellationToken cancellationToken = default)
     {
-        var deserializer = new StaticDeserializerBuilder(new YamlStaticContext())
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
-            .Build();
-
         // load template smart collections
-        string templateText = await File.ReadAllTextAsync(config.Template!, cancellationToken);
-        var rootModel = deserializer.Deserialize<RootModel>(templateText);
+        var templateModel = await YamlReader.ReadTemplate(config, cancellationToken);
 
         // load current smart collections
         ICollection<SmartCollectionResponseModel> currentSmartCollections =
             await client.GetSmartCollections(cancellationToken);
 
         // diff and plan
-        var toAdd = rootModel.SmartCollections
+        var toAdd = templateModel.SmartCollections
             .Where(sc => currentSmartCollections.All(csc => csc.Name != sc.Name))
             .Where(sc => sc.Rename?.From is null)
             .ToList();
 
-        var toUpdate = rootModel.SmartCollections
+        var toUpdate = templateModel.SmartCollections
             .Where(sc => currentSmartCollections.Any(csc => csc.Name == sc.Name && csc.Query != sc.Query))
             .Select(sc => new Tuple<SmartCollectionModel, SmartCollectionResponseModel>(sc, currentSmartCollections.First(csc => csc.Name == sc.Name)))
             .ToList();
 
-        foreach (var sc in rootModel.SmartCollections.Where(sc => !string.IsNullOrWhiteSpace(sc.Rename?.From)))
+        foreach (var sc in templateModel.SmartCollections.Where(sc => !string.IsNullOrWhiteSpace(sc.Rename?.From)))
         {
             var from = currentSmartCollections.FirstOrDefault(csc => string.Equals(csc.Name, sc.Rename?.From));
             if (from != null)
@@ -45,8 +39,8 @@ public class Planner
         }
 
         var toRemove = currentSmartCollections
-            .Where(sc => rootModel.SmartCollections.All(csc => csc.Name != sc.Name))
-            .Where(sc => rootModel.SmartCollections.All(csc => csc.Rename?.From != sc.Name))
+            .Where(sc => templateModel.SmartCollections.All(csc => csc.Name != sc.Name))
+            .Where(sc => templateModel.SmartCollections.All(csc => csc.Rename?.From != sc.Name))
             .ToList();
 
         return new PlanModel

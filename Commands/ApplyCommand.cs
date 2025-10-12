@@ -1,7 +1,7 @@
 using ConsoleAppFramework;
 using etvctl.Api;
 using etvctl.Planning;
-using etvctl.Models;
+using etvctl.Models.Config;
 using Spectre.Console;
 
 namespace etvctl.Commands;

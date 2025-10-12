@@ -1,2 +1,13 @@
+# the ersatztv server address
 server: http://localhost:8409
-template: /tmp/smart_collections.yml
+
+# the template folder used for exporting and planning
+template: /tmp/etvctl
+
+# defines how template files should be organized on disk
+organization:
+  # default for any resource type not listed in overrides
+  # options: single_file, file_per_type, file_per_resource
+  default: single_file
+  overrides:
+    smart_collection: file_per_type
