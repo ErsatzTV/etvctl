@@ -29,6 +29,29 @@ namespace etvctl.Api
         [Post("/api/channels/{channelNumber}/playout/reset")]
         Task Reset(string channelNumber, CancellationToken cancellationToken = default);
 
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/ffmpeg/profiles")]
+        Task<ICollection<FFmpegFullProfileResponseModel>> GetFFmpegProfiles(CancellationToken cancellationToken = default);
+
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Content-Type: application/json")]
+        [Post("/api/ffmpeg/profiles/new")]
+        Task CreateFFmpegProfile([Body] CreateFFmpegProfile body, CancellationToken cancellationToken = default);
+
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Content-Type: application/json")]
+        [Put("/api/ffmpeg/profiles/update")]
+        Task UpdateFFmpegProfile([Body] UpdateFFmpegProfile body, CancellationToken cancellationToken = default);
+
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Delete("/api/ffmpeg/delete/{id}")]
+        Task DeleteFFmpegProfile(int id, CancellationToken cancellationToken = default);
+
         /// <summary>Scan library</summary>
         /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
@@ -185,6 +208,96 @@ namespace etvctl.Api
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateFFmpegProfile
+    {
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("threadCount")]
+        public int ThreadCount { get; set; }
+
+        [JsonPropertyName("hardwareAcceleration")]
+        public HardwareAccelerationKind HardwareAcceleration { get; set; }
+
+        [JsonPropertyName("vaapiDisplay")]
+        public string VaapiDisplay { get; set; }
+
+        [JsonPropertyName("vaapiDriver")]
+        public VaapiDriver VaapiDriver { get; set; }
+
+        [JsonPropertyName("vaapiDevice")]
+        public string VaapiDevice { get; set; }
+
+        [JsonPropertyName("qsvExtraHardwareFrames")]
+        public int? QsvExtraHardwareFrames { get; set; }
+
+        [JsonPropertyName("resolutionId")]
+        public int ResolutionId { get; set; }
+
+        [JsonPropertyName("scalingBehavior")]
+        public ScalingBehavior ScalingBehavior { get; set; }
+
+        [JsonPropertyName("videoFormat")]
+        public FFmpegProfileVideoFormat VideoFormat { get; set; }
+
+        [JsonPropertyName("videoProfile")]
+        public string VideoProfile { get; set; }
+
+        [JsonPropertyName("videoPreset")]
+        public string VideoPreset { get; set; }
+
+        [JsonPropertyName("allowBFrames")]
+        public bool AllowBFrames { get; set; }
+
+        [JsonPropertyName("bitDepth")]
+        public FFmpegProfileBitDepth BitDepth { get; set; }
+
+        [JsonPropertyName("videoBitrate")]
+        public int VideoBitrate { get; set; }
+
+        [JsonPropertyName("videoBufferSize")]
+        public int VideoBufferSize { get; set; }
+
+        [JsonPropertyName("tonemapAlgorithm")]
+        public FFmpegProfileTonemapAlgorithm TonemapAlgorithm { get; set; }
+
+        [JsonPropertyName("audioFormat")]
+        public FFmpegProfileAudioFormat AudioFormat { get; set; }
+
+        [JsonPropertyName("audioBitrate")]
+        public int AudioBitrate { get; set; }
+
+        [JsonPropertyName("audioBufferSize")]
+        public int AudioBufferSize { get; set; }
+
+        [JsonPropertyName("normalizeLoudnessMode")]
+        public NormalizeLoudnessMode NormalizeLoudnessMode { get; set; }
+
+        [JsonPropertyName("audioChannels")]
+        public int AudioChannels { get; set; }
+
+        [JsonPropertyName("audioSampleRate")]
+        public int AudioSampleRate { get; set; }
+
+        [JsonPropertyName("normalizeFramerate")]
+        public bool NormalizeFramerate { get; set; }
+
+        [JsonPropertyName("deinterlaceVideo")]
+        public bool DeinterlaceVideo { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class CreateSmartCollection
     {
 
@@ -202,6 +315,207 @@ namespace etvctl.Api
             get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
             set { _additionalProperties = value; }
         }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FFmpegFullProfileResponseModel
+    {
+
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("threadCount")]
+        public int ThreadCount { get; set; }
+
+        [JsonPropertyName("hardwareAcceleration")]
+        public HardwareAccelerationKind HardwareAcceleration { get; set; }
+
+        [JsonPropertyName("vaapiDisplay")]
+        public string VaapiDisplay { get; set; }
+
+        [JsonPropertyName("vaapiDriver")]
+        public VaapiDriver VaapiDriver { get; set; }
+
+        [JsonPropertyName("vaapiDevice")]
+        public string VaapiDevice { get; set; }
+
+        [JsonPropertyName("qsvExtraHardwareFrames")]
+        public int? QsvExtraHardwareFrames { get; set; }
+
+        [JsonPropertyName("resolution")]
+        public string Resolution { get; set; }
+
+        [JsonPropertyName("scalingBehavior")]
+        public ScalingBehavior ScalingBehavior { get; set; }
+
+        [JsonPropertyName("videoFormat")]
+        public FFmpegProfileVideoFormat VideoFormat { get; set; }
+
+        [JsonPropertyName("videoProfile")]
+        public string VideoProfile { get; set; }
+
+        [JsonPropertyName("videoPreset")]
+        public string VideoPreset { get; set; }
+
+        [JsonPropertyName("allowBFrames")]
+        public bool AllowBFrames { get; set; }
+
+        [JsonPropertyName("bitDepth")]
+        public FFmpegProfileBitDepth BitDepth { get; set; }
+
+        [JsonPropertyName("videoBitrate")]
+        public int VideoBitrate { get; set; }
+
+        [JsonPropertyName("videoBufferSize")]
+        public int VideoBufferSize { get; set; }
+
+        [JsonPropertyName("tonemapAlgorithm")]
+        public FFmpegProfileTonemapAlgorithm TonemapAlgorithm { get; set; }
+
+        [JsonPropertyName("audioFormat")]
+        public FFmpegProfileAudioFormat AudioFormat { get; set; }
+
+        [JsonPropertyName("audioBitrate")]
+        public int AudioBitrate { get; set; }
+
+        [JsonPropertyName("audioBufferSize")]
+        public int AudioBufferSize { get; set; }
+
+        [JsonPropertyName("normalizeLoudnessMode")]
+        public NormalizeLoudnessMode NormalizeLoudnessMode { get; set; }
+
+        [JsonPropertyName("audioChannels")]
+        public int AudioChannels { get; set; }
+
+        [JsonPropertyName("audioSampleRate")]
+        public int AudioSampleRate { get; set; }
+
+        [JsonPropertyName("normalizeFramerate")]
+        public bool NormalizeFramerate { get; set; }
+
+        [JsonPropertyName("deinterlaceVideo")]
+        public bool? DeinterlaceVideo { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum FFmpegProfileAudioFormat
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"None")]
+        None = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Aac")]
+        Aac = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Ac3")]
+        Ac3 = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Copy")]
+        Copy = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum FFmpegProfileBitDepth
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EightBit")]
+        EightBit = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"TenBit")]
+        TenBit = 1,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum FFmpegProfileTonemapAlgorithm
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Linear")]
+        Linear = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Clip")]
+        Clip = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Gamma")]
+        Gamma = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Reinhard")]
+        Reinhard = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Mobius")]
+        Mobius = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Hable")]
+        Hable = 5,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum FFmpegProfileVideoFormat
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"None")]
+        None = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"H264")]
+        H264 = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Hevc")]
+        Hevc = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Mpeg2Video")]
+        Mpeg2Video = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Av1")]
+        Av1 = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Copy")]
+        Copy = 5,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum HardwareAccelerationKind
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"None")]
+        None = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Qsv")]
+        Qsv = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Nvenc")]
+        Nvenc = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Vaapi")]
+        Vaapi = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"VideoToolbox")]
+        VideoToolbox = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Amf")]
+        Amf = 5,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"V4l2m2m")]
+        V4l2m2m = 6,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Rkmpp")]
+        Rkmpp = 7,
 
     }
 
@@ -231,6 +545,33 @@ namespace etvctl.Api
             get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
             set { _additionalProperties = value; }
         }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum NormalizeLoudnessMode
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Off")]
+        Off = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"LoudNorm")]
+        LoudNorm = 1,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum ScalingBehavior
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"ScaleAndPad")]
+        ScaleAndPad = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Stretch")]
+        Stretch = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Crop")]
+        Crop = 2,
 
     }
 
@@ -280,6 +621,99 @@ namespace etvctl.Api
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateFFmpegProfile
+    {
+
+        [JsonPropertyName("fFmpegProfileId")]
+        public int FFmpegProfileId { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("threadCount")]
+        public int ThreadCount { get; set; }
+
+        [JsonPropertyName("hardwareAcceleration")]
+        public HardwareAccelerationKind HardwareAcceleration { get; set; }
+
+        [JsonPropertyName("vaapiDisplay")]
+        public string VaapiDisplay { get; set; }
+
+        [JsonPropertyName("vaapiDriver")]
+        public VaapiDriver VaapiDriver { get; set; }
+
+        [JsonPropertyName("vaapiDevice")]
+        public string VaapiDevice { get; set; }
+
+        [JsonPropertyName("qsvExtraHardwareFrames")]
+        public int? QsvExtraHardwareFrames { get; set; }
+
+        [JsonPropertyName("resolutionId")]
+        public int ResolutionId { get; set; }
+
+        [JsonPropertyName("scalingBehavior")]
+        public ScalingBehavior ScalingBehavior { get; set; }
+
+        [JsonPropertyName("videoFormat")]
+        public FFmpegProfileVideoFormat VideoFormat { get; set; }
+
+        [JsonPropertyName("videoProfile")]
+        public string VideoProfile { get; set; }
+
+        [JsonPropertyName("videoPreset")]
+        public string VideoPreset { get; set; }
+
+        [JsonPropertyName("allowBFrames")]
+        public bool AllowBFrames { get; set; }
+
+        [JsonPropertyName("bitDepth")]
+        public FFmpegProfileBitDepth BitDepth { get; set; }
+
+        [JsonPropertyName("videoBitrate")]
+        public int VideoBitrate { get; set; }
+
+        [JsonPropertyName("videoBufferSize")]
+        public int VideoBufferSize { get; set; }
+
+        [JsonPropertyName("tonemapAlgorithm")]
+        public FFmpegProfileTonemapAlgorithm TonemapAlgorithm { get; set; }
+
+        [JsonPropertyName("audioFormat")]
+        public FFmpegProfileAudioFormat AudioFormat { get; set; }
+
+        [JsonPropertyName("audioBitrate")]
+        public int AudioBitrate { get; set; }
+
+        [JsonPropertyName("audioBufferSize")]
+        public int AudioBufferSize { get; set; }
+
+        [JsonPropertyName("normalizeLoudnessMode")]
+        public NormalizeLoudnessMode NormalizeLoudnessMode { get; set; }
+
+        [JsonPropertyName("audioChannels")]
+        public int AudioChannels { get; set; }
+
+        [JsonPropertyName("audioSampleRate")]
+        public int AudioSampleRate { get; set; }
+
+        [JsonPropertyName("normalizeFramerate")]
+        public bool NormalizeFramerate { get; set; }
+
+        [JsonPropertyName("deinterlaceVideo")]
+        public bool DeinterlaceVideo { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UpdateSmartCollection
     {
 
@@ -300,6 +734,27 @@ namespace etvctl.Api
             get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
             set { _additionalProperties = value; }
         }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.0.0 (NJsonSchema v11.5.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum VaapiDriver
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Default")]
+        Default = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"iHD")]
+        IHD = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"i965")]
+        I965 = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"RadeonSI")]
+        RadeonSI = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Nouveau")]
+        Nouveau = 4,
 
     }
 

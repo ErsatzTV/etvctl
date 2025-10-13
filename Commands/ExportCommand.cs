@@ -21,13 +21,19 @@ public class ExportCommand : BaseCommand
 
         (ConfigModel config, IErsatzTVv1 client) = configAndClient;
 
-        ICollection<SmartCollectionResponseModel> smartCollections =
-            await client.GetSmartCollections(cancellationToken);
-
         var templateModel = new TemplateModel();
-        foreach (var smartCollection in smartCollections)
+
+        // ffmpeg profiles
+        foreach (var ffmpegProfile in await client.GetFFmpegProfiles(cancellationToken))
         {
-            var model = new SmartCollectionModel { Name = smartCollection.Name, Query = smartCollection.Query };
+            var model = new FFmpegProfileModel(ffmpegProfile);
+            templateModel.FFmpegProfiles.Add(model);
+        }
+
+        // smart collections
+        foreach (var smartCollection in await client.GetSmartCollections(cancellationToken))
+        {
+            var model = new SmartCollectionModel(smartCollection);
             templateModel.SmartCollections.Add(model);
         }
 

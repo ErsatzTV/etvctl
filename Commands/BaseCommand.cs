@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using etvctl.Api;
 using etvctl.Models.Config;
 using Refit;
@@ -9,7 +11,7 @@ namespace etvctl.Commands;
 
 public abstract class BaseCommand
 {
-    private const int RequiredApiVersion = 1;
+    private const int RequiredApiVersion = 2;
 
     protected async Task<ConfigAndClient?> ValidateServer(CancellationToken cancellationToken)
     {
@@ -41,9 +43,26 @@ public abstract class BaseCommand
                 return null;
             }
 
+            var jsonOptions = new JsonSerializerOptions
+            {
+                Converters =
+                {
+                    new JsonStringEnumConverter<HardwareAccelerationKind>(),
+                    new JsonStringEnumConverter<VaapiDriver>(),
+                    new JsonStringEnumConverter<ScalingBehavior>(),
+                    new JsonStringEnumConverter<FFmpegProfileVideoFormat>(),
+                    new JsonStringEnumConverter<FFmpegProfileBitDepth>(),
+                    new JsonStringEnumConverter<FFmpegProfileTonemapAlgorithm>(),
+                    new JsonStringEnumConverter<FFmpegProfileAudioFormat>(),
+                    new JsonStringEnumConverter<NormalizeLoudnessMode>(),
+                },
+
+                TypeInfoResolver = RefitSerializerContext.Default
+            };
+
             var settings = new RefitSettings
             {
-                ContentSerializer = new SystemTextJsonContentSerializer(RefitSerializerContext.Default.Options)
+                ContentSerializer = new SystemTextJsonContentSerializer(jsonOptions)
             };
 
             var client = RestService.For<IErsatzTVv1>(config.Server, settings);

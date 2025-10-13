@@ -30,4 +30,4 @@ organization:
 - Initial release; supports exporting, planning, and applying smart collections
 
 [Unreleased]: https://github.com/ErsatzTV/etvctl/compare/v0.0.1...HEAD
-[0.0.1-prealpha]: https://github.com/ErsatzTV/etvctl/releases/tag/v0.0.1
+[0.0.1]: https://github.com/ErsatzTV/etvctl/releases/tag/v0.0.1
