@@ -20,8 +20,10 @@ organization:
   # options: single_file, file_per_type, file_per_resource
   default: single_file
   overrides:
+    ffmpeg_profile: file_per_resource
     smart_collection: file_per_type
 ```
+- Add export, plan and apply support for ffmpeg profiles
 
 ### Changed
 - Change `config.yml` `template` to take a folder instead of a file
