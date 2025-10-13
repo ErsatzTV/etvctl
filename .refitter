@@ -1,0 +1,8 @@
+{
+  "openApiPath": "../ErsatzTV/ErsatzTV/wwwroot/openapi/v1.json",
+  "namespace": "etvctl.Api",
+  "useCancellationTokens": true,
+  "generateDefaultAdditionalProperties": false,
+  "outputFolder": "./Api",
+  "outputFilename": "ErsatzTV.cs"
+}
