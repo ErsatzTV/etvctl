@@ -1,5 +1,8 @@
+using System.Net;
 using etvctl.Api;
 using etvctl.Models;
+using Refit;
+using Spectre.Console;
 
 namespace etvctl.Planning;
 
@@ -21,7 +24,7 @@ public class FFmpegProfilePlanner(IErsatzTVv1 client) : BasePlanner<FFmpegProfil
 
         foreach (var profile in toAdd)
         {
-            await client.GetResolutionByName(profile.Resolution ?? string.Empty, cancellationToken);
+            _ = await client.GetResolutionByName(profile.Resolution ?? string.Empty, cancellationToken);
         }
 
         var toUpdate = templateModel.FFmpegProfiles
@@ -42,7 +45,7 @@ public class FFmpegProfilePlanner(IErsatzTVv1 client) : BasePlanner<FFmpegProfil
 
         foreach ((FFmpegProfileModel profile, _) in toUpdate)
         {
-            await client.GetResolutionByName(profile.Resolution ?? string.Empty, cancellationToken);
+            _ = await client.GetResolutionByName(profile.Resolution ?? string.Empty, cancellationToken);
         }
 
         var toRemove = currentFFmpegProfiles
@@ -67,7 +70,7 @@ public class FFmpegProfilePlanner(IErsatzTVv1 client) : BasePlanner<FFmpegProfil
                 continue;
             }
 
-            int resolutionId = await client.GetResolutionByName(toAdd.Resolution, cancellationToken);
+            ResolutionViewModel resolution = await client.GetResolutionByName(toAdd.Resolution, cancellationToken);
 
             await client.CreateFFmpegProfile(
                 new CreateFFmpegProfile
@@ -79,7 +82,7 @@ public class FFmpegProfilePlanner(IErsatzTVv1 client) : BasePlanner<FFmpegProfil
                     VaapiDriver = toAdd.VaapiDriver ?? VaapiDriver.Default,
                     VaapiDevice = toAdd.VaapiDevice ?? string.Empty,
                     QsvExtraHardwareFrames = toAdd.QsvExtraHardwareFrames,
-                    ResolutionId = resolutionId,
+                    ResolutionId = resolution.Id,
                     ScalingBehavior = toAdd.ScalingBehavior ?? ScalingBehavior.ScaleAndPad,
                     VideoFormat = toAdd.VideoFormat ?? FFmpegProfileVideoFormat.H264,
                     VideoProfile = toAdd.VideoProfile ?? string.Empty,
@@ -109,7 +112,7 @@ public class FFmpegProfilePlanner(IErsatzTVv1 client) : BasePlanner<FFmpegProfil
                 continue;
             }
 
-            int resolutionId = await client.GetResolutionByName(toUpdateNew.Resolution, cancellationToken);
+            ResolutionViewModel resolution = await client.GetResolutionByName(toUpdateNew.Resolution, cancellationToken);
 
             await client.UpdateFFmpegProfile(
                 new UpdateFFmpegProfile
@@ -122,7 +125,7 @@ public class FFmpegProfilePlanner(IErsatzTVv1 client) : BasePlanner<FFmpegProfil
                     VaapiDriver = toUpdateNew.VaapiDriver ?? VaapiDriver.Default,
                     VaapiDevice = toUpdateNew.VaapiDevice ?? string.Empty,
                     QsvExtraHardwareFrames = toUpdateNew.QsvExtraHardwareFrames,
-                    ResolutionId = resolutionId,
+                    ResolutionId = resolution.Id,
                     ScalingBehavior = toUpdateNew.ScalingBehavior ?? ScalingBehavior.ScaleAndPad,
                     VideoFormat = toUpdateNew.VideoFormat ?? FFmpegProfileVideoFormat.H264,
                     VideoProfile = toUpdateNew.VideoProfile ?? string.Empty,
@@ -146,7 +149,14 @@ public class FFmpegProfilePlanner(IErsatzTVv1 client) : BasePlanner<FFmpegProfil
 
         foreach (var toRemove in plan.FFmpegProfiles.ToRemove)
         {
-            await client.DeleteFFmpegProfile(toRemove.Id, cancellationToken);
+            try
+            {
+                await client.DeleteFFmpegProfile(toRemove.Id, cancellationToken);
+            }
+            catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
+            {
+                AnsiConsole.MarkupLine("[red] ffmpeg profile \"{0}\" cannot be deleted.[/]", Markup.Escape(toRemove.Name));
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using etvctl.Api;
+using Refit;
 
 namespace etvctl;
 
@@ -15,4 +16,16 @@ namespace etvctl;
 [JsonSerializable(typeof(HardwareAccelerationKind))]
 [JsonSerializable(typeof(CreateFFmpegProfile))]
 [JsonSerializable(typeof(UpdateFFmpegProfile))]
+[JsonSerializable(typeof(ProblemDetails))]
+[JsonSerializable(typeof(ResolutionViewModel))]
+[JsonSourceGenerationOptions(Converters = [
+    typeof(JsonStringEnumConverter<HardwareAccelerationKind>),
+    typeof(JsonStringEnumConverter<VaapiDriver>),
+    typeof(JsonStringEnumConverter<ScalingBehavior>),
+    typeof(JsonStringEnumConverter<FFmpegProfileVideoFormat>),
+    typeof(JsonStringEnumConverter<FFmpegProfileBitDepth>),
+    typeof(JsonStringEnumConverter<FFmpegProfileTonemapAlgorithm>),
+    typeof(JsonStringEnumConverter<FFmpegProfileAudioFormat>),
+    typeof(JsonStringEnumConverter<NormalizeLoudnessMode>)
+])]
 internal sealed partial class RefitSerializerContext : JsonSerializerContext;
