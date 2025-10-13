@@ -13,10 +13,12 @@ public class Planner
     {
         var templateModel = await YamlReader.ReadTemplate(config, cancellationToken);
 
+        var ffmpegProfilePlanner = new FFmpegProfilePlanner(client);
         var smartCollectionPlanner = new SmartCollectionPlanner(client);
 
         return new PlanModel
         {
+            FFmpegProfiles = await ffmpegProfilePlanner.Plan(templateModel, cancellationToken),
             SmartCollections = await smartCollectionPlanner.Plan(templateModel, cancellationToken)
         };
     }

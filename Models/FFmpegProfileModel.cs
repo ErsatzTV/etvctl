@@ -71,4 +71,6 @@ public class FFmpegProfileModel
     public int? AudioSampleRate { get; set; }
     public bool? NormalizeFramerate { get; set; }
     public bool? DeinterlaceVideo { get; set; }
+
+    public RenameModel? Rename { get; set; }
 }

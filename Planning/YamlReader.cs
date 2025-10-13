@@ -23,7 +23,30 @@ public static class YamlReader
             return deserializer.Deserialize<TemplateModel>(singleFileText);
         }
 
-        var result = new TemplateModel { SmartCollections = [] };
+        var result = new TemplateModel { FFmpegProfiles = [], SmartCollections = [] };
+
+        // check for file per type
+        string ffmpegProfilesFile = Path.Combine(folder, "ffmpeg_profiles.yml");
+        if (File.Exists(ffmpegProfilesFile))
+        {
+            string ffmpegProfilesText = await File.ReadAllTextAsync(ffmpegProfilesFile, cancellationToken);
+            result.FFmpegProfiles.AddRange(
+                deserializer.Deserialize<List<FFmpegProfileModel>>(ffmpegProfilesText));
+        }
+        else
+        {
+            // load individual ffmpeg profiles from folder
+            string ffmpegProfilesFolder = Path.Combine(folder, "ffmpeg_profiles");
+            if (Directory.Exists(ffmpegProfilesFolder))
+            {
+                IEnumerable<string> allFiles = Directory.EnumerateFiles(ffmpegProfilesFolder, "*.yml", SearchOption.TopDirectoryOnly);
+                foreach (string file in allFiles)
+                {
+                    string ffmpegProfileText = await File.ReadAllTextAsync(file, cancellationToken);
+                    result.FFmpegProfiles.Add(deserializer.Deserialize<FFmpegProfileModel>(ffmpegProfileText));
+                }
+            }
+        }
 
         // check for file per type
         string smartCollectionsFile = Path.Combine(folder, "collections", "smart.yml");

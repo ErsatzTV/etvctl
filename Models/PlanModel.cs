@@ -4,6 +4,7 @@ namespace etvctl.Models;
 
 public class PlanModel
 {
+    public required ChangeSet<FFmpegProfileModel, FFmpegFullProfileResponseModel> FFmpegProfiles { get; set; }
     public required ChangeSet<SmartCollectionModel, SmartCollectionResponseModel> SmartCollections { get; set; }
 
     public bool IsEmpty()
@@ -13,16 +14,16 @@ public class PlanModel
 
     public int ToAdd()
     {
-        return SmartCollections.ToAdd.Count;
+        return FFmpegProfiles.ToAdd.Count + SmartCollections.ToAdd.Count;
     }
 
     public int ToUpdate()
     {
-        return SmartCollections.ToUpdate.Count;
+        return FFmpegProfiles.ToUpdate.Count + SmartCollections.ToUpdate.Count;
     }
 
     public int ToRemove()
     {
-        return SmartCollections.ToRemove.Count;
+        return FFmpegProfiles.ToRemove.Count + SmartCollections.ToRemove.Count;
     }
 }

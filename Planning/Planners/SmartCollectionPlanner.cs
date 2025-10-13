@@ -4,8 +4,9 @@ using etvctl.Models;
 namespace etvctl.Planning;
 
 public class SmartCollectionPlanner(IErsatzTVv1 client)
+    : BasePlanner<SmartCollectionModel, SmartCollectionResponseModel>
 {
-    public async Task<ChangeSet<SmartCollectionModel, SmartCollectionResponseModel>> Plan(
+    public override async Task<ChangeSet<SmartCollectionModel, SmartCollectionResponseModel>> Plan(
         TemplateModel templateModel,
         CancellationToken cancellationToken)
     {
@@ -20,7 +21,7 @@ public class SmartCollectionPlanner(IErsatzTVv1 client)
             .ToList();
 
         var toUpdate = templateModel.SmartCollections
-            .Where(sc => currentSmartCollections.Any(csc => csc.Name == sc.Name && csc.Query != sc.Query))
+            .Where(sc => currentSmartCollections.Any(csc => csc.Name == sc.Name && HasStringChanges(csc.Query, sc.Query)))
             .Select(sc => new Tuple<SmartCollectionModel, SmartCollectionResponseModel>(
                 sc,
                 currentSmartCollections.First(csc => csc.Name == sc.Name)))
@@ -48,7 +49,7 @@ public class SmartCollectionPlanner(IErsatzTVv1 client)
         };
     }
 
-    public async Task Apply(PlanModel plan, CancellationToken cancellationToken)
+    public override async Task Apply(PlanModel plan, CancellationToken cancellationToken)
     {
         foreach (var toAdd in plan.SmartCollections.ToAdd)
         {
