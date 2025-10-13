@@ -20,8 +20,10 @@ organization:
   # options: single_file, file_per_type, file_per_resource
   default: single_file
   overrides:
+    ffmpeg_profile: file_per_resource
     smart_collection: file_per_type
 ```
+- Add export, plan and apply support for ffmpeg profiles
 
 ### Changed
 - Change `config.yml` `template` to take a folder instead of a file
@@ -30,4 +32,4 @@ organization:
 - Initial release; supports exporting, planning, and applying smart collections
 
 [Unreleased]: https://github.com/ErsatzTV/etvctl/compare/v0.0.1...HEAD
-[0.0.1-prealpha]: https://github.com/ErsatzTV/etvctl/releases/tag/v0.0.1
+[0.0.1]: https://github.com/ErsatzTV/etvctl/releases/tag/v0.0.1

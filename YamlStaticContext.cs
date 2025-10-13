@@ -1,3 +1,4 @@
+using etvctl.Api;
 using etvctl.Models;
 using etvctl.Models.Config;
 using YamlDotNet.Serialization;
@@ -13,6 +14,8 @@ namespace etvctl;
 [YamlSerializable(typeof(ChannelModel))]
 [YamlSerializable(typeof(SmartCollectionModel))]
 [YamlSerializable(typeof(RenameModel))]
+[YamlSerializable(typeof(FFmpegProfileModel))]
+[YamlSerializable(typeof(HardwareAccelerationKind))]
 public partial class YamlStaticContext : YamlDotNet.Serialization.StaticContext
 {
 }

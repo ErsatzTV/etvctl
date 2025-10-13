@@ -10,4 +10,5 @@ organization:
   # options: single_file, file_per_type, file_per_resource
   default: single_file
   overrides:
+    ffmpeg_profile: file_per_resource
     smart_collection: file_per_type
