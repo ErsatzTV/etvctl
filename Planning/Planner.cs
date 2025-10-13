@@ -25,6 +25,9 @@ public class Planner
 
     public async Task<bool> ApplyPlan(IErsatzTVv1 client, PlanModel plan, CancellationToken cancellationToken = default)
     {
+        var ffmpegProfilePlanner = new FFmpegProfilePlanner(client);
+        await ffmpegProfilePlanner.Apply(plan, cancellationToken);
+
         var smartCollectionPlanner = new SmartCollectionPlanner(client);
         await smartCollectionPlanner.Apply(plan, cancellationToken);
 

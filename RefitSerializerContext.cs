@@ -13,4 +13,6 @@ namespace etvctl;
 [JsonSerializable(typeof(FFmpegFullProfileResponseModel))]
 [JsonSerializable(typeof(ICollection<FFmpegFullProfileResponseModel>))]
 [JsonSerializable(typeof(HardwareAccelerationKind))]
+[JsonSerializable(typeof(CreateFFmpegProfile))]
+[JsonSerializable(typeof(UpdateFFmpegProfile))]
 internal sealed partial class RefitSerializerContext : JsonSerializerContext;

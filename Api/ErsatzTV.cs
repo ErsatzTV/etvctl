@@ -77,6 +77,12 @@ namespace etvctl.Api
         [Post("/api/maintenance/empty_trash")]
         Task Trash(CancellationToken cancellationToken = default);
 
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/ffmpeg/resolution/by-name/{name}")]
+        Task<int> GetResolutionByName(string name, CancellationToken cancellationToken = default);
+
         /// <summary>Get sessions</summary>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
