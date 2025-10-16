@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "etvctl", "etvctl.csproj", "{82F9894D-B7A3-4F96-A1AE-CC90EAB774AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "etvctl", "etvctl/etvctl.csproj", "{82F9894D-B7A3-4F96-A1AE-CC90EAB774AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
