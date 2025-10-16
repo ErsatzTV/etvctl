@@ -4,7 +4,7 @@ using Spectre.Console;
 
 namespace etvctl.Planning;
 
-public class FFmpegProfilePrinter : BaseComparer
+public partial class FFmpegProfilePrinter : BaseComparer
 {
     public static void Print(PlanModel plan)
     {

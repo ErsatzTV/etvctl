@@ -29,4 +29,8 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\etvctl.Generator\etvctl.Generator.csproj" OutputItemType="Analyzer" />
+    </ItemGroup>
+
 </Project>
