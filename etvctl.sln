@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "etvctl", "etvctl.csproj", "{82F9894D-B7A3-4F96-A1AE-CC90EAB774AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "etvctl", "etvctl/etvctl.csproj", "{82F9894D-B7A3-4F96-A1AE-CC90EAB774AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "etvctl.Generator", "etvctl.Generator\etvctl.Generator.csproj", "{45F83A21-B425-4590-A2E2-84333F623D86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +14,9 @@ Global
 		{82F9894D-B7A3-4F96-A1AE-CC90EAB774AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82F9894D-B7A3-4F96-A1AE-CC90EAB774AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82F9894D-B7A3-4F96-A1AE-CC90EAB774AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45F83A21-B425-4590-A2E2-84333F623D86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45F83A21-B425-4590-A2E2-84333F623D86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45F83A21-B425-4590-A2E2-84333F623D86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45F83A21-B425-4590-A2E2-84333F623D86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

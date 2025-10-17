@@ -16,8 +16,8 @@ public class PlanPrinter
         AnsiConsole.MarkupLine("etvctl will perform the following actions:");
         AnsiConsole.MarkupLine("");
 
-        FFmpegProfilePrinter.Print(plan);
-        SmartCollectionPrinter.Print(plan);
+        FFmpegProfilePrinter.Print(plan.FFmpegProfiles);
+        SmartCollectionPrinter.Print(plan.SmartCollections);
 
         AnsiConsole.MarkupLine(
             $"Plan: [green]{plan.ToAdd()} to add[/], [yellow]{plan.ToUpdate()} to change[/], [red]{plan.ToRemove()} to delete[/].");
