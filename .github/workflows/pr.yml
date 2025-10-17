@@ -20,7 +20,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet publish -o publish
+        run: cd etvctl && dotnet publish -o ..\publish
 
       - name: Check Executable
         run: .\publish\etvctl.exe
@@ -42,7 +42,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet publish -o publish
+        run: cd etvctl && dotnet publish -o ../publish
 
       - name: Check Executable
         run: ./publish/etvctl
@@ -67,7 +67,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet publish -o publish
+        run: cd etvctl && dotnet publish -o ../publish
 
       - name: Check Executable
         run: ./publish/etvctl
