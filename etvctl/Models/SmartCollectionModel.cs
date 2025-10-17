@@ -1,4 +1,5 @@
 using etvctl.Api;
+using etvctl.Generator;
 
 namespace etvctl.Models;
 
@@ -14,7 +15,11 @@ public record SmartCollectionModel
         Query = model.Query;
     }
 
+    [EtvPrinterOrder(1)]
     public string? Name { get; set; }
+
+    [EtvPrinterOrder(2)]
     public string? Query { get; set; }
+
     public RenameModel? Rename { get; set; }
 }
